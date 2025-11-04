@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// prisma/schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // uncomment next line if you use Prisma <5.10
+  // directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id            String        @id @default(uuid())
+  email         String?       @unique
+  name          String?
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole      @default(USER)
+  files         File[]        @relation("UserFiles")
+  shareLinks    ShareLink[]   @relation("UserShareLinks")
+  isVip         Boolean       @default(false)
+  transactions  Transaction[]
+}
+
+model Transaction {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  amount          Float
+  orderId         String   @unique
+  status          String   @default("PENDING") // SUCCESS / FAILED / PENDING
+  transactionDate DateTime @default(now())
+  description     String?
+}
+
+model File {
+  id          String       @id @default(uuid())
+  ownerId     String
+  owner       User         @relation("UserFiles", fields: [ownerId], references: [id])
+  shareLinkId String // Foreign key đến ShareLink
+  shareLink   ShareLink    @relation(fields: [shareLinkId], references: [id])
+  filename    String
+  size        Int
+  mime        String
+  url         String
+  createdAt   DateTime     @default(now())
+  emailShares EmailShare[]
+}
+
+model ShareLink {
+  id             String    @id @default(uuid())
+  token          String    @unique
+  passwordHash   String?
+  expiredAt      DateTime?
+  maxDownloads   Int?
+  downloadsCount Int       @default(0)
+  createdAt      DateTime  @default(now())
+  creatorId      String
+  creator        User      @relation("UserShareLinks", fields: [creatorId], references: [id])
+  files          File[] // 1-n: một link nhiều file
+  title          String
+  message        String? // tùy chọn
+}
+
+model EmailShare {
+  id             String   @id @default(uuid())
+  fileId         String
+  file           File     @relation(fields: [fileId], references: [id])
+  recipientEmail String
+  sentAt         DateTime @default(now())
+  token          String   @unique
+}
