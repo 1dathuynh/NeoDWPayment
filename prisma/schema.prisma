@@ -1,24 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
-// prisma/schema.prisma
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // uncomment next line if you use Prisma <5.10
-  // directUrl = env("DATABASE_URL_UNPOOLED")
-}
-
-enum UserRole {
-  ADMIN
-  USER
 }
 
 model User {
@@ -29,35 +15,35 @@ model User {
   image         String?
   password      String?
   role          UserRole      @default(USER)
+  isVip         Boolean       @default(false)
   files         File[]        @relation("UserFiles")
   shareLinks    ShareLink[]   @relation("UserShareLinks")
-  isVip         Boolean       @default(false)
   transactions  Transaction[]
 }
 
 model Transaction {
   id              String   @id @default(uuid())
   userId          String
-  user            User     @relation(fields: [userId], references: [id])
   amount          Float
   orderId         String   @unique
-  status          String   @default("PENDING") // SUCCESS / FAILED / PENDING
+  status          String   @default("PENDING")
   transactionDate DateTime @default(now())
   description     String?
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 model File {
   id          String       @id @default(uuid())
   ownerId     String
-  owner       User         @relation("UserFiles", fields: [ownerId], references: [id])
-  shareLinkId String // Foreign key đến ShareLink
-  shareLink   ShareLink    @relation(fields: [shareLinkId], references: [id])
+  shareLinkId String
   filename    String
   size        Int
   mime        String
   url         String
   createdAt   DateTime     @default(now())
   emailShares EmailShare[]
+  owner       User         @relation("UserFiles", fields: [ownerId], references: [id])
+  shareLink   ShareLink    @relation(fields: [shareLinkId], references: [id])
 }
 
 model ShareLink {
@@ -69,17 +55,22 @@ model ShareLink {
   downloadsCount Int       @default(0)
   createdAt      DateTime  @default(now())
   creatorId      String
-  creator        User      @relation("UserShareLinks", fields: [creatorId], references: [id])
-  files          File[] // 1-n: một link nhiều file
   title          String
-  message        String? // tùy chọn
+  message        String?
+  files          File[]
+  creator        User      @relation("UserShareLinks", fields: [creatorId], references: [id])
 }
 
 model EmailShare {
   id             String   @id @default(uuid())
   fileId         String
-  file           File     @relation(fields: [fileId], references: [id])
   recipientEmail String
   sentAt         DateTime @default(now())
   token          String   @unique
+  file           File     @relation(fields: [fileId], references: [id])
+}
+
+enum UserRole {
+  ADMIN
+  USER
 }

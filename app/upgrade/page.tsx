@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Check, Zap, Wifi, Lock, Rocket, Trophy } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 const UpgradePage = () => {
   const { data: session, status } = useSession()
+  const router = useRouter()
   const isVip = session?.user?.isVip
   if (status === 'loading') {
     return (
@@ -113,7 +115,7 @@ const UpgradePage = () => {
             <CardContent className="space-y-6">
               <div>
                 <p className="text-3xl font-bold text-white">
-                  $9.99<span className="text-lg text-slate-400">/month</span>
+                  $1.90<span className="text-lg text-slate-400">/month</span>
                 </p>
                 <p className="text-sm text-teal-300 mt-1">Billed monthly, cancel anytime</p>
               </div>
@@ -147,16 +149,7 @@ const UpgradePage = () => {
               </ul>
               <Button
                 onClick={async () => {
-                  const res = await fetch('/api/payment', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      userId: session?.user?.id,
-                    }), // ✅ truyền userId
-                  })
-                  const data = await res.json()
-                  console.log(data)
-                  window.location.href = data.data.payUrl // chuyển sang MoMo
+                  router.push('/payment-method')
                 }}
                 className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold"
               >

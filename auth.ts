@@ -18,7 +18,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
       if (session.user && token.role) {
         session.user.role = token.role
-        session.user.isVip  = token.isVip
+        session.user.isVip = token.isVip
       }
       return session
     },
@@ -51,5 +51,43 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         return null
       },
     }),
+    // Credentials({
+    // async authorize(credentials) {
+    //   try {
+    //     console.log("Incoming credentials:", credentials);
+    //     const validated = loginSchemas.safeParse(credentials);
+
+    //     if (!validated.success) {
+    //       console.error("❌ Validation failed:", validated.error);
+    //       throw new Error("Invalid input");
+    //     }
+
+    //     const { email, password } = validated.data;
+    //     const user = await getUserByEmail(email);
+    //     console.log("Fetched user:", user);
+
+    //     if (!user || !user.password) {
+    //       throw new Error("User not found or missing password");
+    //     }
+
+    //     const passwordMatch = await bcrypt.compare(password, user.password);
+    //     if (!passwordMatch) {
+    //       throw new Error("Invalid password");
+    //     }
+
+    //     // ✅ NextAuth requires a serializable user object
+    //     return {
+    //       id: user.id,
+    //       name: user.name,
+    //       email: user.email,
+    //       role: user.role,
+    //       isVip: user.isVip,
+    //     };
+    //   } catch (err) {
+    //     console.error("Authorize error:", err);
+    //     return null;
+    //   }
+    // },
+    // }),
   ],
 })
