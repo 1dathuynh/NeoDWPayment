@@ -38,7 +38,7 @@ export default async function RootLayout({
             <PageTransition>
               <main className="mx-auto px-6 py-7 my-auto">
                 {children}
-                <Toaster />
+                <Toaster richColors position="top-center" />
               </main>
             </PageTransition>
           </ThemeProvider>

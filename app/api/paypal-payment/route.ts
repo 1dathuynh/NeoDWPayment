@@ -6,8 +6,8 @@ export async function POST(req: NextRequest) {
   const { userId } = await req.json()
   console.log('Received userId in POST request:', userId)
   // 1. Tạo order trên PayPal
-  const clientId = 'Ac2ik3nAGRncUkH2i9Jbl3Sb4C3X7hw7MH04KsasB9HGRlO60sXxRrAtKDaxLr7urF0oL63MWCZkDfB8'
-  const secret = 'EIKhrv5ch-NZX1jjwJVdtFUQBMylTJvaJTX7fMdE2swjnHyj54EiOGSetRnSgbJCE-_c5dnlaxE1QB2h'
+  const clientId = 'Aa8mghJcaFi1GfOn6_3v3VWUXEszSL4M4PvO0fG6ewcWzJrMFZ9ZPIZlAUH_n-KucR2LSx8tNvSRQ6w1'
+  const secret = 'EMtPJ16HF5ZN7RD_fo1wjg37cgeW9Dcro69JvOD33cyVeH7qVuXr5WPkarvWIsMPVfpS474sHvHnKtBf'
   const baseUrl = process.env.PAYPAL_BASE_URL || 'https://api-m.sandbox.paypal.com'
 
   // Lấy access token
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
         },
       ],
       application_context: {
-        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+        return_url: `http://localhost:3000/payment-success`,
         cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
       },
     }),

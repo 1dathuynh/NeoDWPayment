@@ -9,6 +9,8 @@ import { ConnectionPanel } from '@/components/connection-panel'
 import { FileTransferArea } from '@/components/file-transfer-area'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { Spinner } from '@/components/ui/spinner'
 
 export default function P2PFileTransfer() {
   const [selectedPeer, setSelectedPeer] = useState<string>('')
@@ -19,13 +21,23 @@ export default function P2PFileTransfer() {
     if (!session?.user) {
       window.location.reload()
     } else if (!session.user.isVip) {
-      alert('⚠️ Tính năng này chỉ dành cho tài khoản VIP!')
-      router.push('/upgrade') // hoặc bất kỳ trang nâng cấp nào
+      toast.warning('⚠️ Tính năng này chỉ dành cho tài khoản VIP!')
+      setTimeout(() => {
+        router.push('/upgrade')
+      }, 2000)
     }
   }, [session, status])
 
   if (!session?.user?.isVip) {
-    return <div className="text-center mt-10">Đang kiểm tra quyền truy cập...</div>
+    return (
+      <div className="flex flex-col items-center justify-center text-center mt-10">
+        {/* 1. Thêm Spinner */}
+        <Spinner className="w-6 h-6 mb-2 text-blue-500" />
+
+        {/* 2. Thông báo đang kiểm tra */}
+        <div className="text-gray-600">Check VIP access ...</div>
+      </div>
+    )
   }
 
   const {

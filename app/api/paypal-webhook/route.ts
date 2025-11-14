@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const eventType = body.event_type
     const resource = body.resource
 
-    if (eventType === 'CHECKOUT.ORDER.APPROVED' || eventType === 'PAYMENT.CAPTURE.COMPLETED') {
+    if (eventType === 'CHECKOUT.ORDER.COMPLETED' || eventType === 'PAYMENT.CAPTURE.COMPLETED') {
       const orderId = resource.id
       const userId = resource.purchase_units?.[0]?.reference_id
 
