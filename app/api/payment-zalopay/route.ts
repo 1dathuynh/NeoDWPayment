@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     apptime: Date.now(),
     item: JSON.stringify(items),
     embeddata: JSON.stringify(embed_data),
-    amount: 5000,
+    amount: 50000,
     description: `Thanh toán ZaloPay cho user ${userId}`,
     bankcode: 'zalopayapp',
     ipnUrl: 'https://a91a5c42c49f.ngrok-free.app/api/zalopay-ipn',

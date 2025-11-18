@@ -8,14 +8,13 @@ export async function POST(req: NextRequest) {
   //parameters
   const body = await req.json()
   const { userId } = body
-  
 
   var accessKey = 'F8BBA842ECF85'
   var secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz'
   var orderInfo = 'pay with MoMo'
   var partnerCode = 'MOMO'
-  var redirectUrl = 'http://localhost:3000/'
-  var ipnUrl = 'https://a91a5c42c49f.ngrok-free.app/api/momo-ipn'
+  var redirectUrl = 'http://localhost:3000/payment-success'
+  var ipnUrl = 'https://a070f915371d.ngrok-free.app/api/momo-ipn'
   var requestType = 'payWithMethod'
   var amount = '50000'
   var orderId = partnerCode + new Date().getTime()
